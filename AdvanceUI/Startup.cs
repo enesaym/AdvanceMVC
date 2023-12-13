@@ -1,3 +1,5 @@
+using AdvanceUI.ConnectAPI;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -23,10 +25,27 @@ namespace AdvanceUI
 		public void ConfigureServices(IServiceCollection services)
 		{
 			services.AddControllersWithViews();
-		}
+            services.AddHttpClient<TokenService>(conf =>
+            {
+                //conf.BaseAddress = new Uri("http://localhost:5000");
+                conf.BaseAddress = new Uri(Configuration["myBaseUri"]);
+            });
+            services.AddAuthentication(a =>
+            {
+                a.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                a.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+            }).AddCookie(a =>
+            {
+                a.LoginPath = "/Auth/Login";
+                a.Cookie.Name = CookieAuthenticationDefaults.AuthenticationScheme;
+                a.Cookie.HttpOnly = true;
+            });
+            services.AddSession();
 
-		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-		public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        }
+
+        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
 		{
 			if (env.IsDevelopment())
 			{
