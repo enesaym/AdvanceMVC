@@ -64,6 +64,15 @@ namespace AdvanceUI.ConnectAPI
             }
             return null;
         }
+        public async Task<List<EmployeeSelectDTO>> GetEmployeeBase()
+        {
+            var response = await _client.GetAsync("Employee/GetEmployeeBase");
+            if (response.IsSuccessStatusCode)
+            {
+                return JsonConvert.DeserializeObject<List<EmployeeSelectDTO>>(await response.Content.ReadAsStringAsync());
+            }
+            return null;
+        }
 
 
 

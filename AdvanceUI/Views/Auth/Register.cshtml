@@ -33,13 +33,21 @@
 										<input asp-for="Name" type="text" class="form-control" id="exampleInputtext1" aria-describedby="textHelp">
 									</div>
 									<div class="mb-3">
+										<label for="exampleInputtext1" class="form-label">Soyad</label>
+										<input asp-for="Surname" type="text" class="form-control" id="exampleInputtext1" aria-describedby="textHelp">
+									</div>
+									<div class="mb-3">
 										<label for="exampleInputEmail1" class="form-label">Email </label>
 										<input asp-for="Email" type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
 									</div>
 									<div class="mb-3">
+										<label for="exampleInputEmail1" class="form-label">Tel No </label>
+										<input asp-for="PhoneNumber" type="tel" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+									</div>
+									<div class="mb-3">
 										<label for="businessUnitSelect" class="form-label">Business Unit</label>
-										<select class="form-select" id="businessUnitSelect">
-											<option value="">Choose Business Unit</option>
+										<select  asp-for="BusinessUnitID" class="form-select" id="businessUnitSelect">
+											<option value="">İş bölümü</option>
 											@foreach (var unit in ViewBag.BusinessUnits)
 											{
 												<option value="@unit.ID">@unit.BusinessUnitName</option>
@@ -48,19 +56,29 @@
 									</div>
 									<div class="mb-3">
 										<label for="titleSelect" class="form-label">Title</label>
-										<select class="form-select" id="titleSelect">
-											<option value="">Choose Title</option>
+										<select asp-for="TitleID" class="form-select" id="titleSelect">
+											<option value="">Yetki</option>
 											@foreach (var title in ViewBag.Titles)
 											{
 												<option value="@title.ID">@title.TitleName</option>
 											}
 										</select>
 									</div>
+									<div class="mb-3">
+										<label for="employeeSelect" class="form-label">Yönetici</label>
+										<select asp-for="UpperEmployeeID" class="form-select" id="employeeSelect">
+											<option value="">Yönetici</option>
+											@foreach (var employees in ViewBag.Employees)
+											{
+												<option value="@employees.ID">@employees.Name   @employees.Surname </option>
+											}
+										</select>
+									</div>
 									<div class="mb-4">
 										<label for="exampleInputPassword1" class="form-label">Şifre</label>
-										<input type="password" class="form-control" id="exampleInputPassword1">
+										<input asp-for="Password" type="password" class="form-control" id="exampleInputPassword1">
 									</div>
-									<input class="btn btn-primary w-100 py-8 fs-4 mb-4 rounded-2">Kayıt Ol</input>
+									<input type="submit" class="btn btn-primary w-100 py-8 fs-4 mb-4 rounded-2" value="Kayıt Ol"></input>
 									<div class="d-flex align-items-center justify-content-center">
 										<p class="fs-4 mb-0 fw-bold">Hesabınız var mı?</p>
 										<a class="text-primary fw-bold ms-2" href="@Url.Action("Login", "Auth")">Giriş Yap </a>

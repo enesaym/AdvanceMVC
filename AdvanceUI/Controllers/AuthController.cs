@@ -1,4 +1,5 @@
 ﻿using AdvanceUI.ConnectAPI;
+using AdvanceUI.Helpers;
 using AdvanceUI.Models.DTO.Employee;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
@@ -31,7 +32,7 @@ namespace AdvanceUI.Controllers
 
 				//mvc session cookie auth
 				// signin yapmak gerekir => ya bunla Identity ya da session yukarda olan
-
+				string id=TokenHelper.GetIdFromToken(token);
 				var claims = new List<Claim>()
 				{
 					new Claim(ClaimTypes.Name,dto.Email)
@@ -48,7 +49,14 @@ namespace AdvanceUI.Controllers
 				//
 				//return RedirectToAction("Index2", new { dto = dto }); posta yönlendirmek için parametre verdik routevalues
 			}
-			return View();
+			else
+			{
+                ViewBag.ErrorMessage = "Geçersiz e-posta veya şifre.";
+                ModelState.AddModelError(string.Empty, "Geçersiz e-posta veya şifre.");
+                return View(dto);
+				
+			}
+		
 		}
 
 
@@ -71,6 +79,7 @@ namespace AdvanceUI.Controllers
 		{
             ViewBag.BusinessUnits = await _tokenService.GetAllUnits();
             ViewBag.Titles = await _tokenService.GetAllTitles();
+            ViewBag.Employees = await _tokenService.GetEmployeeBase();
             return View();
 		}
 	}
