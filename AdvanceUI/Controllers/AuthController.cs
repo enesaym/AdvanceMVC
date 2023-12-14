@@ -1,10 +1,14 @@
 ﻿using AdvanceUI.ConnectAPI;
 using AdvanceUI.Helpers;
 using AdvanceUI.Models.DTO.Employee;
+using AdvanceUI.Models.DTO.UserInfo;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -28,24 +32,26 @@ namespace AdvanceUI.Controllers
 			var token = await _tokenService.GetToken(dto);
 			if (token != "")
 			{
+				//cookie ye token ekler
 				HttpContext.Response.Cookies.Append("token", token, new CookieOptions { Expires = System.DateTimeOffset.Now.AddMinutes(20),/* Domain = "APISample"*/ });
-
-				//mvc session cookie auth
-				// signin yapmak gerekir => ya bunla Identity ya da session yukarda olan
-				string id=TokenHelper.GetIdFromToken(token);
+				
+				UserInfoDTO userInfo=TokenHelper.GetUserInfoFromToken(token);
+          
 				var claims = new List<Claim>()
 				{
-					new Claim(ClaimTypes.Name,dto.Email)
+					new Claim(ClaimTypes.Name,userInfo.Name)
 				};
 
-				var userIdentity = new ClaimsIdentity(claims, "login");
+				var userIdentity = new ClaimsIdentity(claims,CookieAuthenticationDefaults.AuthenticationScheme);
 				var userpri = new ClaimsPrincipal(userIdentity);
 
-				await HttpContext.SignInAsync(userpri); // UI da authorize yapıyoruz kişiyi
+                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, userpri); // UI da authorize yapıyoruz kişiyi
+                
 
-				// Çıkış için
-				//await HttpContext.SignOutAsync();
-				return RedirectToAction("Index", "Home");
+               
+
+                //await HttpContext.SignOutAsync();
+                return RedirectToAction("Index", "Home");
 				//
 				//return RedirectToAction("Index2", new { dto = dto }); posta yönlendirmek için parametre verdik routevalues
 			}

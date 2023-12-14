@@ -32,15 +32,17 @@ namespace AdvanceUI
             });
             services.AddAuthentication(a =>
             {
-                a.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                a.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+				//a.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+				//a.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+				a.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
             }).AddCookie(a =>
             {
                 a.LoginPath = "/Auth/Login";
                 a.Cookie.Name = CookieAuthenticationDefaults.AuthenticationScheme;
                 a.Cookie.HttpOnly = true;
             });
-            services.AddSession();
+			services.AddAuthorization();
+            //services.AddSession(x=>x.IdleTimeout=TimeSpan.FromSeconds(2));
 
         }
 
@@ -59,8 +61,11 @@ namespace AdvanceUI
 
 			app.UseRouting();
 
+			app.UseAuthentication();
+
 			app.UseAuthorization();
 
+			//app.UseSession();
 			app.UseEndpoints(endpoints =>
 			{
 				endpoints.MapControllerRoute(

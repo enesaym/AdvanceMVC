@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace AdvanceUI.Controllers
@@ -20,7 +21,8 @@ namespace AdvanceUI.Controllers
 
 		public IActionResult Index()
 		{
-			return View();
+            //string id = User.Claims.Where(a => a.Type == ClaimTypes.Name).Select(a => a.Value).SingleOrDefault();
+            return View();
 		}
 
 		public IActionResult Privacy()

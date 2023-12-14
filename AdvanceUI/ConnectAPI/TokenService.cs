@@ -46,6 +46,9 @@ namespace AdvanceUI.ConnectAPI
 
 			return false;
 		}
+
+		//single responsibility geregi bunlar baska classa tasinabilir..
+
         public async Task<List<BusinessUnitSelectDTO>> GetAllUnits()
         {
             var response = await _client.GetAsync("Unit/GetAllUnits");
