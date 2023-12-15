@@ -42,6 +42,7 @@ namespace AdvanceUI
                 a.Cookie.HttpOnly = true;
             });
 			services.AddAuthorization();
+			services.AddScoped<GenericService>();
             //services.AddSession(x=>x.IdleTimeout=TimeSpan.FromSeconds(2));
 
         }

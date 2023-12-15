@@ -4,11 +4,11 @@ using System.Threading.Tasks;
 
 namespace AdvanceUI.ConnectAPI
 {
-    public class HttpClientBase
+    public class GenericService
     {
         private readonly HttpClient httpClient;
 
-        public HttpClientBase(HttpClient httpClient)
+        public GenericService(HttpClient httpClient)
         {
             this.httpClient = httpClient;
         }
@@ -19,7 +19,7 @@ namespace AdvanceUI.ConnectAPI
             var content = new StringContent(jsonContent);
             content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(mediaType ?? "application/json");
 
-            HttpRequestMessage request = new HttpRequestMessage(method, url);
+            HttpRequestMessage request = new HttpRequestMessage(method, "https://localhost:47300/api/" + url);
             request.Content = content;
 
             HttpResponseMessage response = await httpClient.SendAsync(request);

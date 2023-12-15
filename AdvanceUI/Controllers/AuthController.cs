@@ -36,20 +36,19 @@ namespace AdvanceUI.Controllers
 				HttpContext.Response.Cookies.Append("token", token, new CookieOptions { Expires = System.DateTimeOffset.Now.AddMinutes(20),/* Domain = "APISample"*/ });
 				
 				UserInfoDTO userInfo=TokenHelper.GetUserInfoFromToken(token);
-          
-				var claims = new List<Claim>()
-				{
-					new Claim(ClaimTypes.Name,userInfo.Name)
+
+                var claims = new List<Claim>()
+                {
+                    new Claim(ClaimTypes.Name,userInfo.Name),
+                    new Claim(ClaimTypes.NameIdentifier,userInfo.ID)
 				};
 
 				var userIdentity = new ClaimsIdentity(claims,CookieAuthenticationDefaults.AuthenticationScheme);
 				var userpri = new ClaimsPrincipal(userIdentity);
 
-                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, userpri); // UI da authorize yapıyoruz kişiyi
+                //20 dk sonra logouta atar
+                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, userpri, new AuthenticationProperties() { ExpiresUtc = DateTimeOffset.Now.AddMinutes(20) }); // UI da authorize yapıyoruz kişiyi
                 
-
-               
-
                 //await HttpContext.SignOutAsync();
                 return RedirectToAction("Index", "Home");
 				//
