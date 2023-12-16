@@ -19,15 +19,19 @@ namespace AdvanceUI.Helpers
 				var nameClaim=claims.FirstOrDefault(c => c.Type == "Name");
 				var surnameClaim = claims.FirstOrDefault(c => c.Type == "Surname");
 				var emailClaim = claims.FirstOrDefault(c => c.Type == "Email");
+				var titleNameClaim = claims.FirstOrDefault(c => c.Type == "TitleName");
+				var titleIDClaim = claims.FirstOrDefault(c => c.Type == "TitleID");
 				if (idClaim != null || nameClaim!=null)
 				{
 					string idValue = idClaim.Value;
 					string nameValue = nameClaim.Value;
 					string surnameValue= surnameClaim.Value;
 					string emailValue = emailClaim.Value;
+					string titleNameValue= titleNameClaim.Value;
+					string titleIdValue = titleIDClaim.Value;
 					return new UserInfoDTO
 					{
-						ID=idValue, Name=nameValue,Email=emailValue,Surname=surnameValue
+						ID=idValue, Name=nameValue,Email=emailValue,Surname=surnameValue,TitleName=titleNameValue,TitleID=titleIdValue
 					};
 				}
 			}

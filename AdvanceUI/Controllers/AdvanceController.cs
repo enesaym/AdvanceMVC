@@ -5,6 +5,8 @@ using System.Linq;
 using System;
 using System.Threading.Tasks;
 using System.Security.Claims;
+using AdvanceUI.Models.DTO.Project;
+using System.Collections.Generic;
 
 namespace AdvanceUI.Controllers
 {
@@ -16,8 +18,13 @@ namespace AdvanceUI.Controllers
                 _genericService = genericservice;
         }
         [HttpGet]
-        public IActionResult AddAdvance()
+        public async Task<IActionResult> AddAdvance()
         {
+            int employeeID = Convert.ToInt32(User.Claims.Where(a => a.Type == ClaimTypes.NameIdentifier).Select(a => a.Value).SingleOrDefault());;
+
+            string url = $"Project/{employeeID}";
+            var projects = await _genericService.GetDatas<List<ProjectSelectDTO>>(url);
+            ViewBag.Projects=projects;
             return View();
         }
 
@@ -29,7 +36,7 @@ namespace AdvanceUI.Controllers
 
             //gelen donen
             var addedAdvance = await _genericService.PostDatas<AdvanceInsertDTO, AdvanceInsertDTO>("Advance/AddAdvance", advanceInsertDTO);
-            return View();
+            return RedirectToAction("Index","Home");
         }
     }
 }

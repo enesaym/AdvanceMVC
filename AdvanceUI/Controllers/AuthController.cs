@@ -40,7 +40,9 @@ namespace AdvanceUI.Controllers
                 var claims = new List<Claim>()
                 {
                     new Claim(ClaimTypes.Name,userInfo.Name),
-                    new Claim(ClaimTypes.NameIdentifier,userInfo.ID)
+                    new Claim(ClaimTypes.NameIdentifier,userInfo.ID),
+					new Claim(ClaimTypes.Role,userInfo.TitleName),
+					new Claim(ClaimTypes.UserData,userInfo.TitleID),
 				};
 
 				var userIdentity = new ClaimsIdentity(claims,CookieAuthenticationDefaults.AuthenticationScheme);

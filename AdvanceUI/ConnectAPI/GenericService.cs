@@ -19,7 +19,7 @@ namespace AdvanceUI.ConnectAPI
             var content = new StringContent(jsonContent);
             content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(mediaType ?? "application/json");
 
-            HttpRequestMessage request = new HttpRequestMessage(method, "https://localhost:47300/api/" + url);
+            HttpRequestMessage request = new HttpRequestMessage(method, "http://localhost:47300/api/" + url);
             request.Content = content;
 
             HttpResponseMessage response = await httpClient.SendAsync(request);

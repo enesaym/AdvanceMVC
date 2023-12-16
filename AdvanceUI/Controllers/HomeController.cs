@@ -1,4 +1,5 @@
 ﻿using AdvanceUI.Models;
+using AdvanceUI.Models.DTO.Advance;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -23,8 +24,9 @@ namespace AdvanceUI.Controllers
 
 		public IActionResult Index()
 		{
-            //string id = User.Claims.Where(a => a.Type == ClaimTypes.Name).Select(a => a.Value).SingleOrDefault();
-            return View();
+			//string id = User.Claims.Where(a => a.Type == ClaimTypes.Name).Select(a => a.Value).SingleOrDefault();
+		
+			return View();
 		}
 
 		public IActionResult Privacy()

@@ -2,26 +2,34 @@
 
 <form asp-action="AddAdvance" asp-controller="Advance" method="post">
     <div class="form-group">
-        <label asp-for="AdvanceAmount">Advance Amount:</label>
+        <label asp-for="AdvanceAmount">Avans Miktarı:</label>
         <input asp-for="AdvanceAmount" class="form-control" />
     </div>
     
     <div class="form-group">
-        <label asp-for="AdvanceDescription">Advance Description:</label>
+        <label asp-for="AdvanceDescription">Avans Açıklaması:</label>
         <input asp-for="AdvanceDescription" class="form-control" />
     </div>
     
     <div class="form-group">
-        <label asp-for="ProjectID">Project ID:</label>
-        <select asp-for="ProjectID" asp-items="@ViewBag.Projects" class="form-control">
-            <option value="">Select Project</option>
+        <label >Project ID:</label>
+        <select asp-for="ProjectID" id="projectSelect" class="form-control">
+            <option value="">Proje seçiniz</option>
+            @foreach (var project in ViewBag.Projects)
+            {
+                <option value="@project.ID">@project.ProjectName</option>
+            }
         </select>
     </div>
     
     <div class="form-group">
-        <label asp-for="DesiredDate">Desired Date:</label>
+        <label asp-for="DesiredDate">İstenilen Tarih:</label>
         <input asp-for="DesiredDate" type="datetime-local" class="form-control" />
     </div>
-    
-    <button type="submit" class="btn btn-primary">Submit</button>
+
+    <div class="row mt-3">
+        <div class="col">
+            <button type="submit" class="btn btn-primary float-right">Avans Talep Et</button>
+        </div>
+    </div>
 </form>
