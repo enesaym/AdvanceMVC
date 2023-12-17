@@ -1,4 +1,6 @@
-﻿using AdvanceUI.Models.DTO.Employee;
+﻿using AdvanceUI.Models.DTO.Advance;
+using AdvanceUI.Models.DTO.Employee;
+using AdvanceUI.Models.DTO.Status;
 using System;
 
 namespace AdvanceUI.Models.DTO.AdvanceHistory
@@ -17,6 +19,10 @@ namespace AdvanceUI.Models.DTO.AdvanceHistory
 
         public DateTime? Date { get; set; }
 
+        public StatusSelectDTO Status { get; set; }
+
         public virtual EmployeeSelectDTO Transactor { get; set; }
+
+        public virtual AdvanceSelectDTO Advance { get; set; }
     }
 }

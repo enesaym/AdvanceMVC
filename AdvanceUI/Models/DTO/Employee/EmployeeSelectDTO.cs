@@ -1,4 +1,5 @@
-﻿using AdvanceUI.Models.DTO.Title;
+﻿using AdvanceUI.Models.DTO.BusinessUnit;
+using AdvanceUI.Models.DTO.Title;
 
 namespace AdvanceUI.Models.DTO.Employee
 {
@@ -14,7 +15,11 @@ namespace AdvanceUI.Models.DTO.Employee
 
         public string Email { get; set; }
 
+        public int? BusinessUnitID { get; set; }
+
         public TitleSelectDTO Title { get; set; }
+
+        public BusinessUnitSelectDTO BusinessUnit { get; set; }
 
         public int TitleID { get; set; }
 
