@@ -1,0 +1,87 @@
+﻿@model List<AdvanceSelectDTO>
+
+
+<div class="container col-md-12">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="mt-1">Geçmiş Avans Taleplerim</h3>
+        </div>
+        <div class="card-body table-border-style">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Talep<br />Tutarı</th>
+                            <th>Talep<br />Tarihi</th>
+                            <th>İstenilen<br />Tarih</th>
+                            <th>Proje</th>
+                            <th>Talep<br />Durumu</th>
+                            <th>Onaylayan<br />Reddeden</th>
+                            <th>Ünvan</th>
+                            <th>Onay/Red<br />Tarihi</th>
+                            <th>Onaylanan<br />Tutar</th>
+                            <th>Belirlenen Ödeme<br />Tarihi</th>
+                            <th>Ödeme Yapılan<br />Tarih</th>
+                            <th>Geri Ödeme<br />Durumu</th>
+                            <th>Detay</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@Math.Round(item.AdvanceAmount.Value, 0) TL</td>
+                                <td>@item.RequestDate.Value.ToString("dd/MM/yyyy")</td>
+                                <td>@item.DesiredDate.Value.ToString("dd/MM/yyyy")</td>
+                                <td>@item.Project.ProjectName</td>
+                                <td>@item.Status.StatusName</td>
+
+                                @if (item.AdvanceHistories != null && item.AdvanceHistories.Any())
+                                {
+                                    <td>@item.AdvanceHistories.LastOrDefault().Transactor.Name @item.AdvanceHistories.LastOrDefault().Transactor.Surname</td>
+                                    <td>@item.AdvanceHistories.LastOrDefault().Transactor.Title.TitleName</td>
+                                    <td>@item.AdvanceHistories.LastOrDefault().Date.Value.ToString("dd/MM/yyyy")</td>
+                                    <td>@Math.Round(item.AdvanceHistories.LastOrDefault().ApprovedAmount.Value, 0) TL</td>
+                                }
+                                else
+                                {
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                }
+
+                                <td>
+                                    @if (item.Payments != null && item.Payments.Any())
+                                    {
+                                        @item.Payments.FirstOrDefault().DeterminedPaymentDate.Value.ToString("dd/MM/yyyy")
+                                    }
+                                </td>
+
+                                <td>
+                                    @if (item.Receipts != null && item.Receipts.Any(x => x.isRefundReceipt == false))
+                                    {
+                                        @item.Receipts.FirstOrDefault(x => x.isRefundReceipt == false).Date.Value.ToString("dd/MM/yyyy")
+                                    }
+                                </td>
+
+                                @if (item.Receipts != null && item.Receipts.Any(x => x.isRefundReceipt == true))
+                                {
+                                    <td>Geri Ödeme Yapıldı</td>
+                                }
+                                else
+                                {
+                                    <td>Geri Ödeme Yapılmadı</td>
+                                }
+
+                                <td>
+                                    <a asp-controller="Advance" asp-action="MyAdvanceRequestDetails" asp-route-id="@item.ID"><i class="icon feather icon-edit f-16 text-success"></i></a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,4 +1,6 @@
-﻿namespace AdvanceUI.Models.DTO.Employee
+﻿using AdvanceUI.Models.DTO.Title;
+
+namespace AdvanceUI.Models.DTO.Employee
 {
     public class EmployeeSelectDTO
     {
@@ -11,5 +13,12 @@
         public string PhoneNumber { get; set; }
 
         public string Email { get; set; }
+
+        public TitleSelectDTO Title { get; set; }
+
+        public int TitleID { get; set; }
+
+        public string TitleName { get; set; }
+
     }
 }

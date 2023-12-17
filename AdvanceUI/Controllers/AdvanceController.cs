@@ -28,6 +28,18 @@ namespace AdvanceUI.Controllers
             return View();
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetMyAdvances()
+        {
+            int Employeeid = Convert.ToInt32(User.Claims.Where(a => a.Type == ClaimTypes.NameIdentifier).Select(a => a.Value).SingleOrDefault());
+
+            var advances = await _genericService.GetDatas<List<AdvanceSelectDTO>>($"Advance/GetAdvanceWithAll/{Employeeid}");
+
+            return View(advances);
+        }
+        
+
+
         [HttpPost]
         public async Task<IActionResult> AddAdvance(AdvanceInsertDTO advanceInsertDTO)
         {
