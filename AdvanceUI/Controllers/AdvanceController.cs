@@ -8,6 +8,7 @@ using System.Security.Claims;
 using AdvanceUI.Models.DTO.Project;
 using System.Collections.Generic;
 using AdvanceUI.Models.DTO.AdvanceHistory;
+using Microsoft.CodeAnalysis;
 
 namespace AdvanceUI.Controllers
 {
@@ -74,10 +75,16 @@ namespace AdvanceUI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> ApproveAdvance(int advanceID,int Amount,int statusID)
+        public async Task<IActionResult> ApproveAdvance(int AdvanceId,int StatusID)
         {
-
-           
+            AdvanceApproveDTO approve = new AdvanceApproveDTO();
+            approve.EmployeeID= Convert.ToInt32(User.Claims.Where(a => a.Type == ClaimTypes.NameIdentifier).Select(a => a.Value).SingleOrDefault());
+            approve.TitleID = Convert.ToInt32(User.Claims.Where(a => a.Type == ClaimTypes.UserData).Select(a => a.Value).SingleOrDefault());
+            approve.AdvanceID = AdvanceId;
+            //inputtan alınan deger
+            var ApprovedAmount=Request.Form["amount"];
+            approve.ApprovedAmount=Convert.ToDecimal(ApprovedAmount);
+            var result = await _genericService.PostDatas<AdvanceApproveDTO, AdvanceApproveDTO>("Advance/ApproveAdvance", approve);
             return RedirectToAction("Index", "Home");
         }
 
@@ -90,7 +97,6 @@ namespace AdvanceUI.Controllers
 			//gelen donen
 			var result = await _genericService.PostDatas<AdvanceRejectDTO, AdvanceRejectDTO>("Advance/RejectAdvance", reject);
 			
-
 			return RedirectToAction("Index", "Home");
         }
 

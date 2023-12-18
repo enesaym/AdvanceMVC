@@ -96,7 +96,8 @@
                             <label for="amount">Uygun Görülen Tutar:</label>
                             <input type="text" name="amount" id="amount" class="form-control" placeholder="Tutar">
                             <input type="hidden" name="AdvanceId" value="@Model.Advance.ID"/>
-
+                          @*   <input type="hidden" name="Amount" value="@Model.ApprovedAmount" /> *@
+                            <input type="hidden" name="StatusId" value="@Model.Status.ID" />
                         </div>
                     </div>
                     <div class="row mt-3">
