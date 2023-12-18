@@ -4,27 +4,32 @@
     <div class="form-group">
         <label asp-for="AdvanceAmount">Avans Miktarı:</label>
         <input asp-for="AdvanceAmount" class="form-control" />
+        <span asp-validation-for="AdvanceAmount" class="text-danger"></span>
     </div>
     
     <div class="form-group">
         <label asp-for="AdvanceDescription">Avans Açıklaması:</label>
         <input asp-for="AdvanceDescription" class="form-control" />
+        <span asp-validation-for="AdvanceDescription" class="text-danger"></span>
     </div>
     
     <div class="form-group">
         <label >Project ID:</label>
         <select asp-for="ProjectID" id="projectSelect" class="form-control">
             <option value="">Proje seçiniz</option>
+
             @foreach (var project in ViewBag.Projects)
             {
                 <option value="@project.ID">@project.ProjectName</option>
             }
         </select>
+        <span asp-validation-for="ProjectID" class="text-danger"></span>
     </div>
     
     <div class="form-group">
         <label asp-for="DesiredDate">İstenilen Tarih:</label>
         <input asp-for="DesiredDate" type="datetime-local" class="form-control" />
+        <span asp-validation-for="DesiredDate" class="text-danger"></span>
     </div>
 
     <div class="row mt-3">

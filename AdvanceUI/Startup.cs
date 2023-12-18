@@ -1,4 +1,8 @@
 using AdvanceUI.ConnectAPI;
+using AdvanceUI.Models.DTO.Advance;
+using AdvanceUI.Models.Validation.Advance;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -43,6 +47,9 @@ namespace AdvanceUI
             });
 			services.AddAuthorization();
 			services.AddScoped<GenericService>();
+
+            services.AddFluentValidationAutoValidation();
+            services.AddScoped<IValidator<AdvanceInsertDTO>, AdvanceInsertDTOValidator>();
             //services.AddSession(x=>x.IdleTimeout=TimeSpan.FromSeconds(2));
 
         }

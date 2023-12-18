@@ -13,6 +13,7 @@ namespace AdvanceUI.Models.DTO.AdvanceHistory
 
         public int? AdvanceID { get; set; }
 
+        public bool? IsActive { get; set; }
 
         public EmployeeSelectDTO AfterEmployee { get; set; }
 

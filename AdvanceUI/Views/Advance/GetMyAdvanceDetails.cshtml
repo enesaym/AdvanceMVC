@@ -1,0 +1,94 @@
+﻿@model AdvanceSelectDTO
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Avans Bilgileri</h5>
+                    <p class="card-text">Talep No : @Model.ID</p>
+                    <p class="card-text">Talep Olusturulma tarihi : @Model.RequestDate.Value.ToString("dd/MM/yyyy")</p>
+                    <p class="card-text">Alınmak İstenen Tarih: @Model.DesiredDate.Value.ToString("dd/MM/yyyy")</p>
+                    <p class="card-text">Projeler : @Model.Project.ProjectName</p>
+                    <p class="card-text">Açıklama : @Model.AdvanceDescription</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Avans Bilgileri</h5>
+                    <p class="card-text">Talep Edilen Tutar : @Model.AdvanceAmount</p>
+                    <p class="card-text">Son Onaylanan Tutar : @ViewBag.Detail.ApprovedAmount </p>
+                    <p class="card-text">Son Durum : @ViewBag.Detail.Status.StatusName</p>
+                    <p class="card-text">Makbuz No : 000 </p>
+                    <p class="card-text">Geri ödeme durumu : Yapılmadı</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>İşlem No</th>
+                        <th>Durum</th>
+                        <th>İşlem Zamanı </th>
+                        <th>İşlem Yapan</th>
+                        <th>Sonraki Aşama Kullanıcısı</th>
+                        <th>Sonraki Durum </th>
+                        <th>Onaylanan Tutar </th>
+                        <th>Ödeme Yapılacak Tarih</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        var i = 1;
+                    }
+                    @foreach (var item in ViewBag.Details as List<AdvanceHistorySelectDTO>)
+                    {
+
+                        <tr>
+                            <td>@i</td>
+                            <td> @item.Status.StatusName</td>
+                            <td>@item.Date.Value.ToString("dd/MM/yyyy")</td>
+                            <td>@item.Transactor.Name @item.Transactor.Surname</td>
+                            <td>@item.AfterEmployee.Name @item.AfterEmployee.Surname</td>
+                            @{
+                                string modifiedText = @item.AfterStatus.StatusName.Replace("ladı", " bekliyor");
+                            }
+                            <td>@modifiedText</td>
+                            <td>@item.ApprovedAmount</td>
+                            @{
+                                if (item.Advance != null && item.Advance.Payments != null && item.Advance.Payments.Any())
+                                {
+                                    <td>@item.Advance.Payments.LastOrDefault()?.DeterminedPaymentDate</td>
+                                }
+                                else
+                                {
+                                    <td>Ödeme tarihi yok</td>
+                                }
+
+                            }
+                            @{
+                                i += 1;
+                            }
+
+                        </tr>
+
+                    }
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+

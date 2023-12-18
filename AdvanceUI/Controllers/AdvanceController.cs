@@ -22,6 +22,7 @@ namespace AdvanceUI.Controllers
         [HttpGet]
         public async Task<IActionResult> AddAdvance()
         {
+         
             int employeeID = Convert.ToInt32(User.Claims.Where(a => a.Type == ClaimTypes.NameIdentifier).Select(a => a.Value).SingleOrDefault());;
 
             string url = $"Project/{employeeID}";
@@ -33,6 +34,15 @@ namespace AdvanceUI.Controllers
         public async Task<IActionResult> AddAdvance(AdvanceInsertDTO advanceInsertDTO)
         {
 
+            if (!ModelState.IsValid)
+            {
+                int employeeID = Convert.ToInt32(User.Claims.Where(a => a.Type == ClaimTypes.NameIdentifier).Select(a => a.Value).SingleOrDefault()); ;
+
+                string url = $"Project/{employeeID}";
+                var projects = await _genericService.GetDatas<List<ProjectSelectDTO>>(url);
+                ViewBag.Projects = projects;
+                return View();
+            }
             advanceInsertDTO.EmployeeID = Convert.ToInt32(User.Claims.Where(a => a.Type == ClaimTypes.NameIdentifier).Select(a => a.Value).SingleOrDefault());
 
             //gelen donen
@@ -49,6 +59,25 @@ namespace AdvanceUI.Controllers
 
             return View(advances);
         }
+
+        //avans gecmisi detayları
+        [HttpGet]
+        public async Task<IActionResult> GetMyAdvanceDetails(int id)
+        {
+            int Employeeid = Convert.ToInt32(User.Claims.Where(a => a.Type == ClaimTypes.NameIdentifier).Select(a => a.Value).SingleOrDefault());
+
+            //kartlar icin
+            var advances = await _genericService.GetDatas<List<AdvanceSelectDTO>>($"Advance/GetAdvanceWithAll/{Employeeid}");
+            //arayuzden tıklanan advance id
+            var advance = advances.Where(x => x.ID == id).FirstOrDefault();
+            //tablo icin
+            var advanceHistoryDetails = await _genericService.GetDatas<List<AdvanceHistorySelectDTO>>($"Advance/GetAdvanceHistoryDetails/{advance.ID}");
+            ViewBag.Detail= advanceHistoryDetails.LastOrDefault();
+            ViewBag.Details = advanceHistoryDetails;
+            return View(advance);
+        }
+
+        //onay bekleyen avans detayları
         [HttpGet]
         public async Task<IActionResult> GetMyApprovalAdvanceDetails(int id)
         {
@@ -71,7 +100,7 @@ namespace AdvanceUI.Controllers
 
             var advancesHistories = await _genericService.GetDatas<List<AdvanceHistorySelectDTO>>($"Advance/GetPendingApprovalAdvance/{Employeeid}");
       
-            return View(advancesHistories);
+            return View(advancesHistories.Where(x=>x.IsActive.Value==true && x.StatusID!=102).ToList());
         }
 
         [HttpPost]
@@ -81,6 +110,7 @@ namespace AdvanceUI.Controllers
             approve.EmployeeID= Convert.ToInt32(User.Claims.Where(a => a.Type == ClaimTypes.NameIdentifier).Select(a => a.Value).SingleOrDefault());
             approve.TitleID = Convert.ToInt32(User.Claims.Where(a => a.Type == ClaimTypes.UserData).Select(a => a.Value).SingleOrDefault());
             approve.AdvanceID = AdvanceId;
+            approve.StatusID= StatusID;
             //inputtan alınan deger
             var ApprovedAmount=Request.Form["amount"];
             approve.ApprovedAmount=Convert.ToDecimal(ApprovedAmount);
