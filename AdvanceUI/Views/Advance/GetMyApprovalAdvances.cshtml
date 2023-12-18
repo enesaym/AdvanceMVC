@@ -1,5 +1,6 @@
 ﻿@model List<AdvanceHistorySelectDTO>
 
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.css">
 
 <div class="container col-md-12">
     <div class="card">
@@ -44,7 +45,7 @@
                                 <td>@item.ApprovedAmount</td>
                               
                                 <td>
-                                    <a asp-controller="Advance" asp-action="MyAdvanceRequestDetails" asp-route-id="@item.ID"><i class="icon feather icon-edit f-16 text-success"></i></a>
+                                    <a asp-controller="Advance" asp-action="GetMyApprovalAdvanceDetails" asp-route-id="@item.ID">Detaya git</a>
                                 </td>
                             </tr>
                         }

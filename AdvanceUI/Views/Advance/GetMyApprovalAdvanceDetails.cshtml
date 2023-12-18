@@ -1,0 +1,119 @@
+﻿@model AdvanceHistorySelectDTO
+<div class="container mt-4">
+  <div class="row">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Çalışan Bilgileri</h5>
+                    <p class="card-text">Calışan Adı : @Model.Advance.Employee.Name  @Model.Advance.Employee.Surname</p>
+                    <p class="card-text">Ünvan : @Model.Advance.Employee.Title.TitleName</p>
+                    <p class="card-text">Birimi: @Model.Advance.Employee.BusinessUnit.BusinessUnitName</p>
+                    <p class="card-text">Talep Oluşturulma Tarihi : @Model.Advance.RequestDate.Value.ToString("dd/MM/yyyy")</p>
+                    <p class="card-text">Alınmak istenen tarih : @Model.Advance.DesiredDate.Value.ToString("dd/MM/yyyy")</p>
+                    <p class="card-text">Proje: @Model.Advance.Project.ProjectName</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Avans Bilgileri</h5>
+                    <p class="card-text">Talep Edilen Tutar : @Model.Advance.AdvanceAmount</p>
+                    <p class="card-text">Son Onaylanan Tutar : @Model.ApprovedAmount</p>
+                    <p class="card-text">Son Durum : @Model.Status.StatusName</p>
+                    <p class="card-text">Açıklama : @Model.Advance.AdvanceDescription</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-4">
+    <div class="col">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>İşlem No</th>
+            <th>Durum</th>
+            <th>İşlem Zamanı </th>
+             <th>İşlem Yapan</th>
+             <th>Sonraki Aşama Kullanıcısı</th>
+             <th>Sonraki Durum </th>
+             <th>Onaylanan Tutar </th>
+             <th>Ödeme Yapılacak Tarih</th>
+          </tr>
+        </thead>
+        <tbody>
+            @{
+                var i = 1;
+            }
+                    @foreach (var item in ViewBag.Details as List<AdvanceHistorySelectDTO>)
+                    {
+
+                        <tr>
+                            <td>@i</td>
+                            <td> @item.Status.StatusName</td>
+                            <td>@item.Date.Value.ToString("dd/MM/yyyy")</td>
+                            <td>@item.Transactor.Name @item.Transactor.Surname</td>
+                            <td>@item.AfterEmployee.Name @item.AfterEmployee.Surname</td>
+                            @{
+                                string modifiedText = @item.AfterStatus.StatusName.Replace("ladı", " bekliyor");
+                            }
+                            <td>@modifiedText</td>
+                            <td>@item.ApprovedAmount</td>
+                            @{
+                                if (item.Advance != null && item.Advance.Payments != null && item.Advance.Payments.Any())
+                                {
+                                    <td>@item.Advance.Payments.LastOrDefault()?.DeterminedPaymentDate</td>
+                                }
+                                else
+                                {
+                                    <td>Ödeme tarihi yok</td>
+                                }
+
+                            }
+                            @{
+                                i += 1;
+                            }
+                      
+                        </tr>
+                        
+                    }
+
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<form method="post">
+    
+    <div class="row mt-4">
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Onay / Red İşlemleri</h5>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="amount">Uygun Görülen Tutar:</label>
+                            <input type="text" name="amount" id="amount" class="form-control" placeholder="Tutar">
+                            <input type="hidden" name="AdvanceId" value="@Model.Advance.ID"/>
+
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-md-6">
+                            <button type="submit" formaction="@Url.Action("ApproveAdvance")" class="btn btn-success">Onayla</button>
+                            <button type="submit" formaction="@Url.Action("RejectAdvance")" class="btn btn-danger">Reddet</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+
+
+  
+   
+
+

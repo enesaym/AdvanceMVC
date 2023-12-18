@@ -13,6 +13,11 @@ namespace AdvanceUI.Models.DTO.AdvanceHistory
 
         public int? AdvanceID { get; set; }
 
+
+        public EmployeeSelectDTO AfterEmployee { get; set; }
+
+        public StatusSelectDTO AfterStatus { get; set; }
+
         public int? TransactorID { get; set; }
 
         public decimal? ApprovedAmount { get; set; }

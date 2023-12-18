@@ -49,14 +49,51 @@ namespace AdvanceUI.Controllers
             return View(advances);
         }
         [HttpGet]
+        public async Task<IActionResult> GetMyApprovalAdvanceDetails(int id)
+        {
+            int Employeeid = Convert.ToInt32(User.Claims.Where(a => a.Type == ClaimTypes.NameIdentifier).Select(a => a.Value).SingleOrDefault());
+
+            //kartlar icin
+            var advancesHistories = await _genericService.GetDatas<List<AdvanceHistorySelectDTO>>($"Advance/GetPendingApprovalAdvance/{Employeeid}");
+            //arayuzden tıklanan advance id
+            var advanceHistory=advancesHistories.Where(x => x.ID == id).FirstOrDefault();
+            //tablo icin
+            var advanceHistoryDetails = await _genericService.GetDatas<List<AdvanceHistorySelectDTO>>($"Advance/GetAdvanceHistoryDetails/{advanceHistory.Advance.ID}");
+            ViewBag.Details= advanceHistoryDetails;
+            return View(advanceHistory);
+        }
+        
+        [HttpGet]
         public async Task<IActionResult> GetMyApprovalAdvances()
         {
             int Employeeid = Convert.ToInt32(User.Claims.Where(a => a.Type == ClaimTypes.NameIdentifier).Select(a => a.Value).SingleOrDefault());
 
             var advancesHistories = await _genericService.GetDatas<List<AdvanceHistorySelectDTO>>($"Advance/GetPendingApprovalAdvance/{Employeeid}");
-
+      
             return View(advancesHistories);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> ApproveAdvance(int advanceID,int Amount,int statusID)
+        {
+
+           
+            return RedirectToAction("Index", "Home");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> RejectAdvance(int AdvanceId)
+        {
+            AdvanceRejectDTO reject=new AdvanceRejectDTO();
+			reject.EmployeeID = Convert.ToInt32(User.Claims.Where(a => a.Type == ClaimTypes.NameIdentifier).Select(a => a.Value).SingleOrDefault());
+            reject.AdvanceID = AdvanceId;
+			//gelen donen
+			var result = await _genericService.PostDatas<AdvanceRejectDTO, AdvanceRejectDTO>("Advance/RejectAdvance", reject);
+			
+
+			return RedirectToAction("Index", "Home");
+        }
+
 
 
 
