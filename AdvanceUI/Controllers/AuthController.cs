@@ -52,10 +52,9 @@ namespace AdvanceUI.Controllers
                 //20 dk sonra logouta atar
                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, userpri, new AuthenticationProperties() { ExpiresUtc = DateTimeOffset.Now.AddMinutes(20) }); // UI da authorize yapıyoruz kişiyi
                 
-                //await HttpContext.SignOutAsync();
+             
                 return RedirectToAction("Index", "Home");
-				//
-				//return RedirectToAction("Index2", new { dto = dto }); posta yönlendirmek için parametre verdik routevalues
+				
 			}
 			else
 			{
