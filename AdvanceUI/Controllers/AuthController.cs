@@ -71,26 +71,34 @@ namespace AdvanceUI.Controllers
 			return RedirectToAction("Login", "Auth");
 		}
 
-		
+
 		[HttpPost]
 		public async Task<IActionResult> Register(EmployeeRegisterDTO dto)
-        {
-            if(!ModelState.IsValid)
-            {
-                ViewBag.BusinessUnits = await _tokenService.GetAllUnits();
-                ViewBag.Titles = await _tokenService.GetAllTitles();
-                ViewBag.Employees = await _tokenService.GetEmployeeBase();
-                return View();
-            }
-            var result = await _tokenService.Register(dto);
-            if (result)
-            {
-                TempData["KullaniciDurumu"] = "Kullanıcı basariyla kayit edilmistir";
-                return RedirectToAction("Login");
-            }
+		{
+			if (!ModelState.IsValid)
+			{
+				await PopulateDropdownsInViewBag();
+				return View();
+			}
 
-            return View();
-        }
+			var isRegistered = await _tokenService.Register(dto);
+			if (isRegistered)
+			{
+				TempData["KullaniciDurumu"] = "Kullanıcı başarıyla kaydedilmiştir";
+				return RedirectToAction("Login");
+			}
+
+			await PopulateDropdownsInViewBag();
+			ViewBag.ErrorMessage = "Kullanıcı veritabanında zaten var";
+			return View(dto);
+		}
+
+		private async Task PopulateDropdownsInViewBag()
+		{
+			ViewBag.BusinessUnits = await _tokenService.GetAllUnits();
+			ViewBag.Titles = await _tokenService.GetAllTitles();
+			ViewBag.Employees = await _tokenService.GetEmployeeBase();
+		}
 
 
 		[HttpGet]
