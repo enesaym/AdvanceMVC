@@ -65,9 +65,13 @@ namespace AdvanceUI.Controllers
 			}
 		
 		}
+		public async Task<IActionResult> Logout()
+		{
+			await HttpContext.SignOutAsync();
+			return RedirectToAction("Login", "Auth");
+		}
 
-
-        [HttpPost]
+		[HttpPost]
         public async Task<IActionResult> Register(EmployeeRegisterDTO dto)
         {
             var donendeger = await _tokenService.Register(dto);

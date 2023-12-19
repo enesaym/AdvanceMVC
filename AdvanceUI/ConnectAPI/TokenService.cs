@@ -2,6 +2,7 @@
 using AdvanceUI.Models.DTO.Employee;
 using AdvanceUI.Models.DTO.Title;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -51,7 +52,9 @@ namespace AdvanceUI.ConnectAPI
 
         public async Task<List<BusinessUnitSelectDTO>> GetAllUnits()
         {
-            var response = await _client.GetAsync("Unit/GetAllUnits");
+			//_client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
+			var response = await _client.GetAsync("Unit/GetAllUnits");
+
             if (response.IsSuccessStatusCode)
             {
                 return JsonConvert.DeserializeObject<List<BusinessUnitSelectDTO>>(await response.Content.ReadAsStringAsync());

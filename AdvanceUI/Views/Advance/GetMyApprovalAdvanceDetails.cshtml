@@ -1,4 +1,5 @@
-﻿@model AdvanceHistorySelectDTO
+﻿@using System.Security.Claims
+@model AdvanceHistorySelectDTO
 <div class="container mt-4">
   <div class="row">
     <div class="col-md-6">
@@ -84,35 +85,106 @@
     </div>
   </div>
 </div>
-<form method="post">
-    
-    <div class="row mt-4">
-        <div class="col">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Onay / Red İşlemleri</h5>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <label for="amount">Uygun Görülen Tutar:</label>
-                            <input type="text" name="amount" id="amount" class="form-control" placeholder="Tutar">
-                            <input type="hidden" name="AdvanceId" value="@Model.Advance.ID"/>
-                          @*   <input type="hidden" name="Amount" value="@Model.ApprovedAmount" /> *@
-                            <input type="hidden" name="StatusId" value="@Model.Status.ID" />
+@{
+    var userDataClaim = User.FindFirst(ClaimTypes.UserData);
+    if (userDataClaim != null)
+    {
+        var userDataValue = userDataClaim.Value;
+       
+    }
+}
+@if (userDataClaim.Value=="3") 
+{
+    <form method="post">
+        <div class="row mt-4">
+            <div class="col">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Onay / Red İşlemleri</h5>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label for="date">Tarih:</label>
+                                <input type="date" name="date" id="date" class="form-control" placeholder="Tarih">
+                                <input type="hidden" name="AdvanceId" value="@Model.Advance.ID" />
+                                <input type="hidden" name="StatusId" value="@Model.Status.ID" />
+                                <input type="hidden" name="Amount" value="@Model.ApprovedAmount" />
+                            </div>
                         </div>
-                    </div>
-                    <div class="row mt-3">
-                        <div class="col-md-6">
-                            <button type="submit" formaction="@Url.Action("ApproveAdvance")" class="btn btn-success">Onayla</button>
-                            <button type="submit" formaction="@Url.Action("RejectAdvance")" class="btn btn-danger">Reddet</button>
+                        <div class="row mt-3">
+                            <div class="col-md-6">
+                                <button type="submit" formaction="@Url.Action("ApproveAdvanceFM")" class="btn btn-success">Kaydet</button>
+                               @*  <button type="submit" formaction="@Url.Action("")" class="btn btn-danger">Reddet</button> *@
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</form>
+    </form>
+
+}
+@if (userDataClaim.Value == "6")
+{
+    <form method="post">
+        <div class="row mt-4">
+            <div class="col">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Onay / Red İşlemleri</h5>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label for="numberInput">Avans Teslimi Makbuz No:</label>
+                                <input type="number" name="numberInput" id="numberInput" class="form-control" min="0" max="100">
+                                <input type="hidden" name="AdvanceId" value="@Model.Advance.ID" />
+                                <input type="hidden" name="StatusId" value="@Model.Status.ID" />
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-md-6">
+                                <button type="submit" formaction="@Url.Action("ApproveAdvanceAccountant")" class="btn btn-success">Kaydet </button>
+                               
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
 
 
+}
+@if (userDataClaim.Value != "3" && userDataClaim.Value != "6")
+{
+    <form method="post">
+
+        <div class="row mt-4">
+            <div class="col">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Onay / Red İşlemleri</h5>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label for="amount">Uygun Görülen Tutar:</label>
+                                <input type="text" name="amount" id="amount" class="form-control" placeholder="Tutar">
+                                <input type="hidden" name="AdvanceId" value="@Model.Advance.ID" />
+                                <input type="hidden" name="StatusId" value="@Model.Status.ID" />
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-md-6">
+                                <button type="submit" formaction="@Url.Action("ApproveAdvance")" class="btn btn-success">Onayla</button>
+                                <button type="submit" formaction="@Url.Action("RejectAdvance")" class="btn btn-danger">Reddet</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+
+
+}
 
   
    

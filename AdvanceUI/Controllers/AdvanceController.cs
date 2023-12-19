@@ -9,9 +9,12 @@ using AdvanceUI.Models.DTO.Project;
 using System.Collections.Generic;
 using AdvanceUI.Models.DTO.AdvanceHistory;
 using Microsoft.CodeAnalysis;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AdvanceUI.Controllers
 {
+    [Authorize]
     public class AdvanceController : Controller
     {
         GenericService _genericService;
@@ -99,17 +102,74 @@ namespace AdvanceUI.Controllers
             int Employeeid = Convert.ToInt32(User.Claims.Where(a => a.Type == ClaimTypes.NameIdentifier).Select(a => a.Value).SingleOrDefault());
 
             var advancesHistories = await _genericService.GetDatas<List<AdvanceHistorySelectDTO>>($"Advance/GetPendingApprovalAdvance/{Employeeid}");
-      
-            return View(advancesHistories.Where(x=>x.IsActive.Value==true && x.StatusID!=102).ToList());
+            int EmployeeTitle = Convert.ToInt32(User.Claims.Where(a => a.Type == ClaimTypes.UserData).Select(a => a.Value).SingleOrDefault());
+            if (EmployeeTitle==3 )
+            {
+                return View(advancesHistories.Where(x => x.IsActive.Value == true && x.StatusID != 206).ToList());
+            }
+            else if (EmployeeTitle == 6 )
+            {
+                return View(advancesHistories.Where(x => x.IsActive.Value == true && x.StatusID != 207).ToList());
+            }
+            else
+            {
+                //reddedilenler sınırlandırılabilir
+                return View(advancesHistories.Where(x => x.IsActive.Value == true && x.StatusID != 102 ).ToList());
+            }
+           
         }
+        [HttpPost]
+        public async Task<IActionResult> ApproveAdvanceFM(int AdvanceId, int StatusID,decimal Amount)
+        {
+            FMApproveAdvanceDTO approve = new FMApproveAdvanceDTO();
+
+            approve.EmployeeID = Convert.ToInt32(User.Claims.Where(a => a.Type == ClaimTypes.NameIdentifier).Select(a => a.Value).SingleOrDefault());
+
+            approve.TitleID = Convert.ToInt32(User.Claims.Where(a => a.Type == ClaimTypes.UserData).Select(a => a.Value).SingleOrDefault());
+
+            approve.AdvanceID = AdvanceId;
+
+            approve.StatusID = StatusID;
+            approve.ApprovedAmount = Amount;
+            //inputtan alınan deger
+            DateTime dateTime = DateTime.Parse(Request.Form["date"]);
+            approve.DeterminedPaymentDate =dateTime;
+          
+            var result = await _genericService.PostDatas<FMApproveAdvanceDTO, FMApproveAdvanceDTO>("Advance/ApproveAdvanceFM", approve);
+            return RedirectToAction("Index", "Home");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ApproveAdvanceAccountant(int AdvanceId)
+        {
+            AccountantApproveDTO approve = new AccountantApproveDTO();
+
+            approve.AccountantID = Convert.ToInt32(User.Claims.Where(a => a.Type == ClaimTypes.NameIdentifier).Select(a => a.Value).SingleOrDefault());
+
+            approve.TitleID= Convert.ToInt32(User.Claims.Where(a => a.Type == ClaimTypes.UserData).Select(a => a.Value).SingleOrDefault());
+
+            approve.AdvanceID = AdvanceId;
+            //inputtan alınan deger
+            approve.ReceiptNo=Request.Form["numberInput"];
+       
+   
+            
+            var result = await _genericService.PostDatas<AccountantApproveDTO, AccountantApproveDTO>("Advance/ApproveAdvanceAccountant", approve);
+            return RedirectToAction("Index", "Home");
+        }
+
 
         [HttpPost]
         public async Task<IActionResult> ApproveAdvance(int AdvanceId,int StatusID)
         {
             AdvanceApproveDTO approve = new AdvanceApproveDTO();
+            
             approve.EmployeeID= Convert.ToInt32(User.Claims.Where(a => a.Type == ClaimTypes.NameIdentifier).Select(a => a.Value).SingleOrDefault());
+           
             approve.TitleID = Convert.ToInt32(User.Claims.Where(a => a.Type == ClaimTypes.UserData).Select(a => a.Value).SingleOrDefault());
+            
             approve.AdvanceID = AdvanceId;
+            
             approve.StatusID= StatusID;
             //inputtan alınan deger
             var ApprovedAmount=Request.Form["amount"];
