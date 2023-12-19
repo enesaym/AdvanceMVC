@@ -140,7 +140,7 @@ namespace AdvanceUI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> ApproveAdvanceAccountant(int AdvanceId)
+        public async Task<IActionResult> ApproveAdvanceAccountant(int AdvanceId, decimal Amount)
         {
             AccountantApproveDTO approve = new AccountantApproveDTO();
 
@@ -151,8 +151,8 @@ namespace AdvanceUI.Controllers
             approve.AdvanceID = AdvanceId;
             //inputtan alınan deger
             approve.ReceiptNo=Request.Form["numberInput"];
-       
-   
+            approve.ApprovedAmount = Amount;
+    
             
             var result = await _genericService.PostDatas<AccountantApproveDTO, AccountantApproveDTO>("Advance/ApproveAdvanceAccountant", approve);
             return RedirectToAction("Index", "Home");

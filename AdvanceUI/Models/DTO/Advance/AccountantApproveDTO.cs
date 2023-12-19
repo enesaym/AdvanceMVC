@@ -12,6 +12,8 @@ namespace AdvanceUI.Models.DTO.Advance
 
         public int TitleID { get; set; }
 
+        public decimal ApprovedAmount { get; set; }
+
         public int? AdvanceID { get; set; }
 
         public DateTime? Date { get; set; }

@@ -1,4 +1,5 @@
 ﻿using AdvanceUI.ConnectAPI;
+
 using AdvanceUI.Helpers;
 using AdvanceUI.Models.DTO.Employee;
 using AdvanceUI.Models.DTO.UserInfo;
@@ -71,11 +72,19 @@ namespace AdvanceUI.Controllers
 			return RedirectToAction("Login", "Auth");
 		}
 
+		
 		[HttpPost]
-        public async Task<IActionResult> Register(EmployeeRegisterDTO dto)
+		public async Task<IActionResult> Register(EmployeeRegisterDTO dto)
         {
-            var donendeger = await _tokenService.Register(dto);
-            if (donendeger)
+            if(!ModelState.IsValid)
+            {
+                ViewBag.BusinessUnits = await _tokenService.GetAllUnits();
+                ViewBag.Titles = await _tokenService.GetAllTitles();
+                ViewBag.Employees = await _tokenService.GetEmployeeBase();
+                return View();
+            }
+            var result = await _tokenService.Register(dto);
+            if (result)
             {
                 TempData["KullaniciDurumu"] = "Kullanıcı basariyla kayit edilmistir";
                 return RedirectToAction("Login");
